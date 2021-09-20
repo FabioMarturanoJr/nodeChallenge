@@ -5,7 +5,10 @@ const createIngredient = async(req, res) => {
 
   const { id } = await create({ name, price, measures, quantity });
 
-  return res.status(201).json({ id })
+  return res.status(201).json({ 
+    message: 'Ingrediente criado com sucesso',
+    id,
+  })
 };
 
 const getAllIngredients = async(req, res) => {
