@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const { createIngredient, getAllIngredients } = require('./controllers/ingredientController');
-const { createProduct } = require('./controllers/productsController');
+const { createProduct, getAllProducts, updateProduct, deleteProduct } = require('./controllers/productsController');
 
 const { isValidIngredient } = require('./middlewares/ingredientsMiddleware');
 
@@ -14,8 +14,11 @@ app.use(bodyParser.json());
 app.get('/ingredients', getAllIngredients);
 app.post('/ingredient', isValidIngredient, createIngredient);
 
-// adicionar o multer criando uma rota para as imagens
+app.get('/products', getAllProducts);
 app.post('/product', createProduct);
+app.put('/product/:id', updateProduct);
+app.delete('/product/:id', deleteProduct);
+// adicionar o multer criando uma rota para as imagens
 
 app.listen(PORT, () => {
   console.log(`Listening port ${PORT}...`);
