@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 app.get('/ingredients', getAllIngredients);
 app.post('/ingredient', isValidIngredient, createIngredient);
 
+// adicionar o multer criando uma rota para as imagens
 app.post('/product', createProduct);
 
 app.listen(PORT, () => {
