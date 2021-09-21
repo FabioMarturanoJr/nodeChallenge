@@ -1,4 +1,4 @@
-const { create, getAll, update, deleteProd } = require('../models/productsModel');
+const { create, getAll, update, deleteProd, addImagePath } = require('../models/productsModel');
 
 const createProduct = async (req, res) => {
   const { name, ingredients } = req.body;
@@ -34,9 +34,23 @@ const deleteProduct = async (req, res) => {
   return res.status(200).json({ message: 'Produto deletado com sucesso', product });
 };
 
+const addImage = async (req, res) => {
+  const { id } = req.params;
+ 
+  await addImagePath({ id });
+
+  return res.status(201).json({ message: "Arquivo salvo com sucesso" });
+};
+
+const errorImage = (error, req, res, next) => {
+  return res.status(400).send({error: error.message})
+};
+
 module.exports = {
   createProduct,
   getAllProducts,
   updateProduct,
   deleteProduct,
+  addImage,
+  errorImage,
 };
