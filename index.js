@@ -9,7 +9,7 @@ const { createProduct, getAllProducts, updateProduct,
   deleteProduct, addImage, errorImage } = require('./controllers/productsController');
 
 const { isValidIngredient } = require('./middlewares/ingredientsMiddleware');
-const { existsImage } = require('./middlewares/productsMiddleware');
+const { existsImage, isValidProduct, existsProductOrIsvalidId } = require('./middlewares/productsMiddleware');
 
 const app = express();
 const PORT = 3000;
@@ -41,10 +41,10 @@ app.get('/ingredients', getAllIngredients);
 app.post('/ingredient', isValidIngredient, createIngredient);
 
 app.get('/products', getAllProducts);
-app.post('/product', createProduct);
-app.post('/product/upload/:id', upload.single('file'), existsImage, addImage, errorImage);
-app.put('/product/:id', updateProduct);
-app.delete('/product/:id', deleteProduct);
+app.post('/product', isValidProduct, createProduct);
+app.post('/product/upload/:id', existsProductOrIsvalidId, upload.single('file'), existsImage, addImage, errorImage);
+app.put('/product/:id', existsProductOrIsvalidId, updateProduct);
+app.delete('/product/:id', existsProductOrIsvalidId, deleteProduct);
 
 app.listen(PORT, () => {
   console.log(`Listening port ${PORT}...`);

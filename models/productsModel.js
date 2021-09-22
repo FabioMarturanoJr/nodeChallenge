@@ -84,4 +84,5 @@ module.exports = {
   update,
   deleteProd,
   addImagePath,
+  findById,
 };
