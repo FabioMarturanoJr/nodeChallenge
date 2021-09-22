@@ -4,9 +4,12 @@ const multer = require('multer');
 let path = require('path');
 
 const { createIngredient, getAllIngredients } = require('./controllers/ingredientController');
-const { createProduct, getAllProducts, updateProduct, deleteProduct, addImage, errorImage } = require('./controllers/productsController');
+
+const { createProduct, getAllProducts, updateProduct, 
+  deleteProduct, addImage, errorImage } = require('./controllers/productsController');
 
 const { isValidIngredient } = require('./middlewares/ingredientsMiddleware');
+const { existsImage } = require('./middlewares/productsMiddleware');
 
 const app = express();
 const PORT = 3000;
@@ -23,10 +26,11 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, call) => {
-  if (!file.originalname.match(/\.(png|jpg|jpeg)$/)){
-    call(new Error('Please upload an image.'))
+  if (!file.originalname.match(/\.(png|jpg)$/)){
+    call(new Error('Please upload an image PNG or JPG.'), false);
+  } else {
+    call(undefined, true);
   }
-  call(undefined, true)
 };
 
 const upload = multer({ storage, fileFilter});
@@ -38,7 +42,7 @@ app.post('/ingredient', isValidIngredient, createIngredient);
 
 app.get('/products', getAllProducts);
 app.post('/product', createProduct);
-app.post('/product/upload/:id', upload.single('file'), addImage, errorImage);
+app.post('/product/upload/:id', upload.single('file'), existsImage, addImage, errorImage);
 app.put('/product/:id', updateProduct);
 app.delete('/product/:id', deleteProduct);
 

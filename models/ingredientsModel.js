@@ -11,7 +11,7 @@ const create = async ({ name, price, measures, quantity }) => {
   return { id };
 };
 
-const getAll = async() => {
+const getAll = async () => {
   const ingredientCollection = await mongoConnect.getConnection()
   .then((db) => db.collection('ingredients'));
 
@@ -20,7 +20,7 @@ const getAll = async() => {
   return { ingredients };
 };
 
-const findById = async({ id }) => {
+const findById = async ({ id }) => {
   const ingredientCollection = await mongoConnect.getConnection()
   .then((db) => db.collection('ingredients'));
 
