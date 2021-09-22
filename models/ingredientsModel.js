@@ -13,7 +13,7 @@ const create = async ({ name, price, measures, quantity }) => {
 
 const getAll = async () => {
   const ingredientCollection = await mongoConnect.getConnection()
-  .then((db) => db.collection('ingredients'));
+    .then((db) => db.collection('ingredients'));
 
   const ingredients = await ingredientCollection.find().toArray();
 
@@ -22,7 +22,7 @@ const getAll = async () => {
 
 const findById = async ({ id }) => {
   const ingredientCollection = await mongoConnect.getConnection()
-  .then((db) => db.collection('ingredients'));
+    .then((db) => db.collection('ingredients'));
 
   const ingredient = await ingredientCollection
     .findOne(new ObjectId(id));
@@ -30,8 +30,17 @@ const findById = async ({ id }) => {
   return { ingredient };
 };
 
+const updateQuantity = async ({ id, quantity }) => {
+  const ingredientCollection = await mongoConnect.getConnection()
+    .then((db) => db.collection('ingredients'));
+
+  await ingredientCollection
+    .updateOne({ _id: new ObjectId(id) }, { $set: { quantity } });
+};
+
 module.exports = {
   create,
   getAll,
   findById,
+  updateQuantity,
 };

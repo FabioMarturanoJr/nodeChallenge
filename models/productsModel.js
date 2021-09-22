@@ -2,6 +2,7 @@ const mongoConnect = require('./connection');
 const { ObjectId } = require('mongodb');
 
 const { findById: findIngredient } = require('./ingredientsModel');
+const { expendQuantIngredients, restoreQuantIngredients } = require('./helpers/expendOrRestoreIngredients');
 
 const sumPrice = async (ingredients) => {
   let price = 0;
@@ -25,6 +26,8 @@ const create = async ({ name, ingredients }) => {
   const { insertedId: id } = await productsCollection
     .insertOne({ name, ingredients, price });
 
+  await expendQuantIngredients({ ingredients });
+
   return { id };
 };
 
@@ -44,17 +47,23 @@ const findById = async ({ id }) => {
   const product = await productsCollection
     .findOne(new ObjectId(id));
   
-    return { product };
+  return { product };
 };
 
 const update = async ({ id, name, ingredients }) => {
   const productsCollection = await mongoConnect.getConnection()
     .then((db) => db.collection('products'));
+    
+  const { product: productBeforeUpdate } = await findById({ id });
+
+  await restoreQuantIngredients({ ingredients: productBeforeUpdate.ingredients });
 
   const price = await sumPrice(ingredients);
 
   await productsCollection
     .updateOne({ _id: new ObjectId(id) }, { $set: { name, ingredients, price } });
+
+  await expendQuantIngredients({ ingredients });  
 };
 
 const addImagePath = async({ id }) => {
@@ -71,6 +80,8 @@ const deleteProd = async ({ id }) => {
     .then((db) => db.collection('products'));
 
   const { product } = await findById({ id });
+
+  await restoreQuantIngredients({ ingredients: product.ingredients });
 
   await productsCollection
     .deleteOne({ _id: new ObjectId(id) });
