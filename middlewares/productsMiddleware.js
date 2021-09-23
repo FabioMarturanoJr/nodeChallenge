@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 
 const { validateProduct } = require('../schemas/productsSchema');
+const { findById: findIngredient } = require('../models/ingredientsModel');
 const { findById } = require('../models/productsModel');
 
 const existsImage = (req, res, next) => {
@@ -33,8 +34,26 @@ const existsProductOrIsvalidId = async (req, res, next) => {
   next();
 };
 
+const checkStockCreate = async (req, res, next) => {
+  const { ingredients } = req.body;
+  const stocks = [];
+
+  const toAwait = ingredients.map(async ({ ingredientId: id, quantityUsed}) => {
+    const { ingredient: { quantity } } = await findIngredient({ id });
+    stocks.push((quantity - quantityUsed) < 0);
+  });
+
+  await Promise.all(toAwait);
+
+  const nagetiveStoke = stocks.some((stock) => stock);
+  if (nagetiveStoke) return res.status(402).json({ message: 'verifique a quantidade dos ingredientes em estoque' });
+  
+  next();
+};
+
 module.exports = {
   existsImage,
   isValidProduct,
   existsProductOrIsvalidId,
+  checkStockCreate,
 };

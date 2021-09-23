@@ -53,7 +53,7 @@ const findById = async ({ id }) => {
 const update = async ({ id, name, ingredients }) => {
   const productsCollection = await mongoConnect.getConnection()
     .then((db) => db.collection('products'));
-    
+
   const { product: productBeforeUpdate } = await findById({ id });
 
   await restoreQuantIngredients({ ingredients: productBeforeUpdate.ingredients });
@@ -70,7 +70,8 @@ const addImagePath = async({ id }) => {
   const productsCollection = await mongoConnect.getConnection()
     .then((db) => db.collection('products'));
 
-  const imgPath = `http://localhost:3000/${id}.png`
+  const imgPath = `http://localhost:3000/${id}.png`;
+  
   await productsCollection
     .updateOne({ _id: new ObjectId(id) }, { $set: { imgPath } });
 };

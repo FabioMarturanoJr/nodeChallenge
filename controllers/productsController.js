@@ -43,7 +43,7 @@ const addImage = async (req, res) => {
 };
 
 const errorImage = (error, req, res, next) => {
-  return res.status(400).send({error: error.message})
+  return res.status(400).send({ error: error.message });
 };
 
 module.exports = {
