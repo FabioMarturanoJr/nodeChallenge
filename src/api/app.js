@@ -47,7 +47,7 @@ app.get('/ingredients', getAllIngredients);
 app.post('/ingredient', validateJWT, isValidIngredient, createIngredient);
 
 app.get('/products', getAllProducts);
-app.get('/product/:id', canBesold);
+app.get('/product/:id', existsProductOrIsvalidId, canBesold);
 app.post('/product', validateJWT, isValidProduct, checkStockCreate, createProduct);
 app.post('/product/upload/:id', validateJWT, existsProductOrIsvalidId, upload.single('file'), existsImage, addImage, errorImage);
 app.put('/product/:id', validateJWT, existsProductOrIsvalidId, checkStockUpdate, updateProduct);
