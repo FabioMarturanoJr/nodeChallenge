@@ -48,9 +48,9 @@ const canBesold = async (req, res) => {
 
   const { product: { ingredients } } = await findById({ id });
 
-  if (await CheckstockIngredientes({ ingredients })) return res.status(402).json({ message: 'produto pode ser vendido' });
+  if (await CheckstockIngredientes({ ingredients })) return res.status(200).json({ message: 'produto pode ser vendido' });
 
-  return res.status(402).json({ message: 'produto não pode ser vendido' });
+  return res.status(422).json({ message: 'produto não pode ser vendido' });
 };
 
 const errorImage = (error, req, res, next) => {

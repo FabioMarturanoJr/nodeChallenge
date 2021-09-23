@@ -7,7 +7,7 @@ const { findById } = require('../models/productsModel');
 const existsImage = (req, res, next) => {
   const file = req.file;
   
-  if (!file) return res.status(404).send({ error: "file not found." });
+  if (!file) return res.status(404).send({ error: "arquivo não encontrado" });
   
   next();
 };
@@ -46,7 +46,7 @@ const checkStockCreate = async (req, res, next) => {
   await Promise.all(toAwait);
 
   const nagativeStoke = stocks.some((stock) => stock);
-  if (nagativeStoke) return res.status(402).json({ message: 'verifique a quantidade dos ingredientes em estoque' });
+  if (nagativeStoke) return res.status(422).json({ message: 'verifique a quantidade dos ingredientes em estoque' });
 
   next();
 };
@@ -56,7 +56,7 @@ const checkStockUpdate = async (req, res, next) => {
   const { id } = req.params;
   const { ingredients } = req.body;
 
-  if (await cantBesold({ id, ingredients })) return res.status(402).json({ message: 'verifique a quantidade dos ingredientes em estoque' });
+  if (await cantBesold({ id, ingredients })) return res.status(422).json({ message: 'verifique a quantidade dos ingredientes em estoque' });
 
   next();
 };

@@ -6,13 +6,13 @@ const areEmpty = (email, password) => !email || !password;
 
 const validateLogin = async ({ email, password }) => {
   const code = 401;
-  const messageFilled = 'All fields must be filled';
-  const messageIncorrect = 'Incorrect username or password';
+  const messageFilled = 'todos os campos devem ser preenchidos';
+  const messageIncorrect = 'usuário ou senha incorreto';
   const user = await findByEmail({ email });
 
   if (areEmpty(email, password)) return { code, message: messageFilled };
   if (!user || user.password !== password) return { code, message: messageIncorrect };
-  if (!emailIsValid(email)) return { code: 409, message: messageIncorrect };
+  if (!emailIsValid(email)) return { code, message: messageIncorrect };
   return {};
 };
 
