@@ -133,6 +133,6 @@ estrutura esperada:
 - `DELETE/product/:id` apaga o produto, restaura no estoque dos ingredientes as matérias primas consumidas, valida o login, e se o produto existe.
 
 
-## Observações
+## Observações finais
 
 Estou satisfeito com o resultado atingido, parando para analisar sempre tem algo a melhorar mas ao mesmo tempo tenho o sentimento de trabalho bem feito, independente do resultado do meu teste utilizei esse desafio para consolidar os conceitos aprendidos na Trybe a fim de atingir meus objetivos.
