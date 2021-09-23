@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { findByEmail } = require('../models/userModel');
+const { findByEmail } = require('../../models/userModel');
 
 const secret = 'nodeChallenge';
 
