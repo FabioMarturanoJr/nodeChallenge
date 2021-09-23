@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 
-const { validateProduct } = require('../schemas/productsSchema');
+const { validateProduct, cantBesold } = require('../schemas/productsSchema');
 const { findById: findIngredient } = require('../models/ingredientsModel');
 const { findById } = require('../models/productsModel');
 
@@ -45,8 +45,8 @@ const checkStockCreate = async (req, res, next) => {
 
   await Promise.all(toAwait);
 
-  const nagetiveStoke = stocks.some((stock) => stock);
-  if (nagetiveStoke) return res.status(402).json({ message: 'verifique a quantidade dos ingredientes em estoque' });
+  const nagativeStoke = stocks.some((stock) => stock);
+  if (nagativeStoke) return res.status(402).json({ message: 'verifique a quantidade dos ingredientes em estoque' });
 
   next();
 };
@@ -55,21 +55,9 @@ const checkStockCreate = async (req, res, next) => {
 const checkStockUpdate = async (req, res, next) => {
   const { id } = req.params;
   const { ingredients } = req.body;
-  const { product: { ingredients: ingredientesBeforeUpdate } } = await findById({ id });
 
-  const stocks = [];
+  if (await cantBesold({ id, ingredients })) return res.status(402).json({ message: 'verifique a quantidade dos ingredientes em estoque' });
 
-  const toAwait = ingredients.map(async ({ ingredientId: id, quantityUsed}) => {
-    const { quantityUsed: quantityUsedBefore } = ingredientesBeforeUpdate.find(({ ingredientId }) => id == ingredientId);
-    const { ingredient: { quantity } } = await findIngredient({ id });
-    stocks.push((quantityUsedBefore + quantity - quantityUsed) < 0);
-  });
-
-  await Promise.all(toAwait);
-
-  const nagetiveStoke = stocks.some((stock) => stock);
-  if (nagetiveStoke) return res.status(402).json({ message: 'verifique a quantidade dos ingredientes em estoque' });
-  
   next();
 };
 

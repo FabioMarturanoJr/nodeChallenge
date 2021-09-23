@@ -1,4 +1,5 @@
-const { create, getAll, update, deleteProd, addImagePath } = require('../models/productsModel');
+const { create, getAll, update, deleteProd, addImagePath, findById } = require('../models/productsModel');
+const { CheckstockIngredientes } = require('../schemas/productsSchema');
 
 const createProduct = async (req, res) => {
   const { name, ingredients } = req.body;
@@ -42,6 +43,16 @@ const addImage = async (req, res) => {
   return res.status(201).json({ message: "Arquivo salvo com sucesso" });
 };
 
+const canBesold = async (req, res) => {
+  const { id } = req.params;
+
+  const { product: { ingredients } } = await findById({ id });
+
+  if (await CheckstockIngredientes({ ingredients })) return res.status(402).json({ message: 'produto pode ser vendido' });
+
+  return res.status(402).json({ message: 'produto não pode ser vendido' });
+};
+
 const errorImage = (error, req, res, next) => {
   return res.status(400).send({ error: error.message });
 };
@@ -52,5 +63,6 @@ module.exports = {
   updateProduct,
   deleteProduct,
   addImage,
+  canBesold,
   errorImage,
 };

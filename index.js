@@ -6,7 +6,7 @@ let path = require('path');
 const { createIngredient, getAllIngredients } = require('./controllers/ingredientController');
 
 const { createProduct, getAllProducts, updateProduct, 
-  deleteProduct, addImage, errorImage } = require('./controllers/productsController');
+  deleteProduct, addImage, canBesold, errorImage } = require('./controllers/productsController');
 
 const { isValidIngredient } = require('./middlewares/ingredientsMiddleware');
 const { existsImage, isValidProduct, existsProductOrIsvalidId, checkStockCreate, checkStockUpdate } = require('./middlewares/productsMiddleware');
@@ -41,6 +41,7 @@ app.get('/ingredients', getAllIngredients);
 app.post('/ingredient', isValidIngredient, createIngredient);
 
 app.get('/products', getAllProducts);
+app.get('/product/:id', canBesold);
 app.post('/product', isValidProduct, checkStockCreate, createProduct);
 app.post('/product/upload/:id', existsProductOrIsvalidId, upload.single('file'), existsImage, addImage, errorImage);
 app.put('/product/:id', existsProductOrIsvalidId, checkStockUpdate, updateProduct);
