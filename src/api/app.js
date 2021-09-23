@@ -5,7 +5,7 @@ const path = require('path');
 
 const { createIngredient, getAllIngredients } = require('../controllers/ingredientController');
 const { createProduct, getAllProducts, updateProduct, 
-  deleteProduct, addImage, canBesold, errorImage } = require('../controllers/productsController');
+  deleteProduct, addImage, canSell, errorImage } = require('../controllers/productsController');
 const { createUser, login } = require('../controllers/userController')
 
 const { isValidIngredient } = require('../middlewares/ingredientsMiddleware');
@@ -47,7 +47,7 @@ app.get('/ingredients', getAllIngredients);
 app.post('/ingredient', validateJWT, isValidIngredient, createIngredient);
 
 app.get('/products', getAllProducts);
-app.get('/product/:id', existsProductOrIsvalidId, canBesold);
+app.get('/product/:id', existsProductOrIsvalidId, canSell);
 app.post('/product', validateJWT, isValidProduct, checkStockCreate, createProduct);
 app.post('/product/upload/:id', validateJWT, existsProductOrIsvalidId, upload.single('file'), existsImage, addImage, errorImage);
 app.put('/product/:id', validateJWT, existsProductOrIsvalidId, checkStockUpdate, updateProduct);

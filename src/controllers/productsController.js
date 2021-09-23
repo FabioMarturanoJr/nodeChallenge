@@ -43,7 +43,7 @@ const addImage = async (req, res) => {
   return res.status(201).json({ message: "Arquivo salvo com sucesso" });
 };
 
-const canBesold = async (req, res) => {
+const canSell = async (req, res) => {
   const { id } = req.params;
 
   const { product: { ingredients } } = await findById({ id });
@@ -63,6 +63,6 @@ module.exports = {
   updateProduct,
   deleteProduct,
   addImage,
-  canBesold,
+  canSell,
   errorImage,
 };
